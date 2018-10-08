@@ -1,0 +1,31 @@
+1. 集群信息 （节点数，版本号等）。
+
+2. 使用场景，是否经过什么操作。
+
+3. 日志execute、driver、applicationMaster日志。
+
+4. IO、网络、内存使用情况。
+jps |grep ExecutorLauncher
+
+container日志： /srv/BigData/hadoop/data1/nm/containerlogs/application_1476692217168_0001/container_e03_1476692217168_0001_01_000003
+
+
+5. hdfs 日志
+hdfs dfs -get /tmp/logs/{user}/logs/{appid}
+
+6.答应Spark环境配置信息
+print(java.lang.System.getProperties())
+ source /opt/Bigdata/FusionInsight/dbservice/.dbservice_profile gsql -p 20051 -d hivemeta -U hive -W HiveUser@   select count(*) from DELEGATION_TOKENS;
+ source /opt/Bigdata/FusionInsight/dbservice/.dbservice_profile
+ gsql -p 20051 -d hivemeta -U hive -W HiveUser@
+ select count(*) from DELEGATION_TOKENS;
+7. 修改过期时间
+kadmin -p kadmin/admin
+kadmin: modify_principal -maxlife 5min admin
+
+8. yarn container日志在本地保留时间
+yarn.nodemanager.delete.debug-delay-sec = 600 10分钟
+9. yarn 默认hdfs日志保留多久
+yarn.log-aggregation.retain-seconds = 1296000
+10. 将多个文件合并成一个文件
+hadoop fs -getmerge /hdfs/output   /local/file.txt
