@@ -1,1 +1,42 @@
 1. 生成patch
+git format-patch -1 d0a0c796662a03483d12cf3ee7736ffab0d84242
+
+2. 检查patch文件
+git apply --stat newpatch.patch
+
+3. 检查能否应用成功
+git apply --check  newpatch.patch
+
+4. 补丁合入
+git am newpatch.patch  -- 带信息合入
+git apply newpathc.patch -- 不带信息合入
+
+5. commit 注释
+git commit --amend
+
+6. 执行:git origin fetch 获得最新.
+
+7. 通过:git branch <new-branch-name> <tag-name> 会根据tag创建新的分支.
+例如:git branch newbranch v1.0 . 会以tag v1.0创建新的分支newbranch;
+
+8. 可以通过git checkout newbranch 切换到新的分支.
+
+9. 通过 git push origin newbranch 把本地创建的分支提交到远程仓库.
+现在远程仓库也会有新创建的分支啦.
+git revert commit-id
+
+DTS/CR/AR_ID : dts
+Modification_Reason : Merge credential before execute the FetchTask
+Modification_Person : lianyuhua
+10. 
+git config --global user.name "lianyuhua"
+git config --global user.email "nitlyh@163.com"
+
+11. branch 
+git branch -m | -M oldbranch newbranch 重命名分支，如果newbranch名字分支已经存在，则需要使用-M强制重命名，否则，使用-m进行重命名。
+git branch -r 列出远程分支，例如：
+git branch -a 列出本地分支和远程分支，例如：
+
+12. 把windows上的项目push到linux上
+git init 生成.git文件 分支：code_coverage
+git  push root@10.120.172.226:/srv/code/lianyuhua/spark2.2/.git/ code_coverage:code_coverage
