@@ -40,3 +40,7 @@ git branch -a 列出本地分支和远程分支，例如：
 12. 把windows上的项目push到linux上
 git init 生成.git文件 分支：code_coverage
 git  push root@10.120.172.226:/srv/code/lianyuhua/spark2.2/.git/ code_coverage:code_coverage
+
+13. 自动填充commit信息，在.gitconfig文件中添加
+[commit]
+    template = C:\\Users\\lianyuhua\\gitmessage.template
