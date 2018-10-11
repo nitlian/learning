@@ -1,0 +1,74 @@
+scala 基础用法
+scala 和java互操作
+引入：import scala.collection.JavaConversion.
+关键字：
+lazy（懒值）： 当val被lazy声明是，会别推迟初始化，直到我们首次对他取值。
+yield：循环体以yield开始会以循环体构成出一个集合，每次迭代生成集合中的一个值
+abstract： 抽象类
+protected：
+trait: 接口
+一、 字符串处理
+   1. take （截取字符串前N位） , drop （删除字符串前N位）, takeRight,dropRight 
+   2. patch （将from - to之间的字符替换成该字符） 例子："Harry".patch(1, "xxx", 3) -> Hxxxy
+   3. reverse 翻转字符串
+   
+二、循环
+   1. Scala没有特工break和continue的语句来退出循环，所有需要借助breakable
+      import scala.util.control.Breaks._
+	  breakable {
+            for (i <- 0 to 10) {
+                println(i)
+                if (i == 6) break()
+            }
+        }
+	2. for 循环，可以将“;”搞成换行。循环体以yield开始会以循环体构成出一个集合，每次迭代生成集合中的一个值
+	   for (i <- 0 to 4;from = 4 - i; j <- 0 to from) {
+            println ("i = %d, from = %d, j = %d".format(i, from, j))
+        }
+        //
+        val x = for (i <- 0 to 3) yield i * 2
+        //x = Vector(0, 2, 4, 6)
+	3. 变成参数
+    def sum (name:String, args: Int*)  = {
+        var result = 0
+        for (arg <- args) result += arg
+        println("sum result = %d".format(result))
+    }
+三、数组
+    1. 多维数组可以使用val matrix = Array.ofDim[Int](3,4)， matrix(row)(column)
+四、映射和元组
+    val scores = Map[String, Int] ("Alice" -> 10, "Bob" -> 11)
+	scores.getOrElse("Bot", default)
+	val scoresx = Map[String, Int] ( ("Alice",10), ("Bob", 11))
+	var scoresxx:Map[String, Int] = Map()
+        scoresxx = scoresxx + ("Ace" -> 1) //添加值
+        scoresxx = scoresxx - "Alice" //删除Alice
+五、类
+    1. @BeanProperty 自动生成set和get方法
+	   @BeanProperty var name:String = _
+	   
+六、枚举， 和java不同，Scala么有枚举类型，但是提供了一个Enumeration的类可以用户产出枚举
+    object Color extends Enumeration{
+    val Red = Value(1)
+    val Yellow = Value(10)
+	}
+	
+七、类型检查和转换 isInstanceOf 和 asInstanOf
+八、文件操作
+    1. import scala.io.Source
+	val source= Source.fromFile("path", "UTF-8")
+	val sourceUrl = Source.fromURL("http://horstamn.com", "UTF-8")
+九、Scala进程控制，执行shell命令
+    sys.process 包含了一个字符串到ProcessBuilder对象的隐式转换。
+	（每个命令后面添加;)
+    import sys.process._ 
+    1. "ls -al .."!；
+	  ！操作符执行的就是ProcessBuilder对象（执行命令）
+	2. 如果使用!!而不是！输出会以字符串的方式返回
+	    val y = "ls -al .."!!;
+	3. #|以管道的方式传送到另外一个程序
+	     "ls -al .." #| "grep spark" !;
+	4. #> 把输出结果重定向到文件， 追加用#>>
+	   "ls -al .." #> new File("output.txt")!;
+	5. #< 文件内容作为输入
+	   "grep spark" #< new File("output.txt")!;
