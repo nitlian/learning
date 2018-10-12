@@ -1,0 +1,57 @@
+一、作为值的函数
+    scala中函数是最大公民，你可以在变量中存放函数
+	_将ceil方法转成了函数。在scala中，你无法直接操作方法，而只能操作函数。
+	val num = 3.1415
+    val fun = ceil  _
+	fun(num)
+二、匿名函数
+    scala不是每个函数都序号函数名字
+	val triple = （x：Double） => 3 * x
+三、带函数参数的函数
+    （参数类型) => 结果类型
+    valueAtOneQuater 需要一个转入double值，输出double值的函数
+    def valueAtOneQuater (f: (Double) => Double, num: Double): Unit = {
+        val num2 = f(num)
+        println("fun %f".format(num2))
+    }
+	
+	val fun = 3 * _ //未指定类型
+	val fun = 3 * (_: Double)// ok
+	val fun:(Double) => Double = 3 * _ //ok
+	
+	(0 to 9).map( "*" * _).foreach(println)
+	
+	reduceLeft
+	(1 to 5).reduceLeft(_ * _) // == 1 * 2 * 3 * 4 *５　_ * _ 每个下划线代表一个参数
+四、柯里化指的是将原来接受两个参数的函数变成新的接受一个参数的函数的过程。新的函数返回一个以原有第二个参数作为参数的函数。
+    def mulBy (factor: Double) = (x: Double) => factor * x
+	mulBy返回的是一个函数
+	val triple = mulBy _
+    triple(3)(2) //等于6.0
+	
+	例子：
+	  def until (condition: => Boolean)(block: => Unit): Unit = {
+        if (!condition) {
+            block
+            until(condition)(block)
+        }
+    }
+	
+	 until(xx == 0) {
+            xx -= 1
+            println(xx)
+        }
+五、模式匹配和样例类
+    1. scala中 match表达式是一个更好的switch用例如下：
+	match {case .. case _ }
+	2. 
+	case class Article（desc: String, price: Double) extends Item
+	case class Bundle(desc: String, discount: Double， items: Item*)extends Item
+	case Bundle(_,_,Article(descr,_),_*) => ..
+	上述代码将descr绑定到Bundle的第一个Article的描述中。
+	你也可以用@表示法将嵌套的值绑定到变量
+	 case Bundle(_,_,art @ Article(descr,_),rest @ _*) => ..
+	 这样子一来art就是Bundle中的第一个Article，而rest则是剩余的Item的序列。
+	 
+	 
+	 
