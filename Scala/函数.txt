@@ -52,6 +52,53 @@
 	你也可以用@表示法将嵌套的值绑定到变量
 	 case Bundle(_,_,art @ Article(descr,_),rest @ _*) => ..
 	 这样子一来art就是Bundle中的第一个Article，而rest则是剩余的Item的序列。
-	 
+六、类型参数
+    scala中，你可以用类型参数来实现类和函数，这样子的类和函数可以用于多种类型。列如：Array[T]
+	1. 泛型类
+	case class Pair[A,B](val first: A, val second: B)
+	new Pair（42， “String”)这里就是Pair[Int, String]
+	2. 泛型函数
+	函数和方法也是可以带类型参数。和泛型类一样，你需要把类型参数放到方法名之后。
+	def getMinddle[T] (a: Array[T]) = a(a.length/2)
+	3、类型变量定界
+	class Pair[T](val first: T, val second: T) {
+    def smaller = if (first.compareTo(second) < 0) first else second //错误，无法识别是否存在compareTo的方法。，我们可以添加一个上界 T<:Comparable[T]
+    }
+	如下：
+	class Pair[T <: Comparable[T]](val first: T, val second: T) {
+    def smaller = if (first.compareTo(second) < 0) first else second
+	}
+	下界用 >: 表示
+	4、视图定界
+	<% 关系意味着T可以别隐式转换成Comparable[T]
+	class Pair[T <% Comparable[T]](val first: T, val second: T) {
+    def smaller = if (first.compareTo(second) < 0) first else second
+    }
+	class Pair2[T <% Ordered[T]](val first: T, val second: T) {
+    def smaller = if (first < second) first else second
+    }
+	5、上下文界定的形式为T:M， 其中M是另一个泛型类，它要求必须存在一个类型为M【T】的“隐式值”。
+    class Pair3[T : Ordering ](val first: T, val second: T) {
+    def smaller (implicit  ordering: Ordering[T]) = if (ordering.compare(first,second) < 0) first else second
+    }
+	6、manifest上下文定界
+	要实例化一个泛型的Array[T]，我们需要Manifest【T】对象。要想让基本类型的数组能正常工作的话，这是必须要的。列举，如果T是Int，你会希望虚拟机中是一个Int[]数组。
+	def makePiar[T: Manifest] (first: T, second: T) = {
+        val r = new Array[T](2)
+        r(0) = first; r(1) = second
+        r
+    }
+	7、度重定界
+	T >: Lower <: Upper
+	T <: Comparable[T] with Serializable with Cloneable
+	T <% Comparable[T] <% String
+	T : Ordering : Manifest
+	
+	8、类型约束
+	类型约束提供的是另一个限定的类型的方式，总三种关系
+	T =:= U
+	T <:< U
+	T <%< U
+	这些约束将会测试T是否等于U，是否为U的子类型， 或者能否被视图（隐式）转换为U。
 	 
 	 
